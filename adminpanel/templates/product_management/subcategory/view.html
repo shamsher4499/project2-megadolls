@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/data-table/dataTables.min.css' %}">
+<link rel="stylesheet" href="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+{% comment %}
+{% url 'add_subcategory' as add_subcategory %} {% endcomment %}
+{% include "includes/section.html" with page_title="Shop Category Management" btn_url=add_subcategory btn_text="Add Shop Category" %}
+
+<section class="section">
+    <div class="row w-100" id="table-striped">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <!-- table contextual / colored -->
+                    <div class="table-responsive py-2 px-2">
+                        {% if subcategories %}
+                            <table class="table table table-striped text-center mb-0 text-center" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Sr no.</th>
+                                        <th>Name</th>
+                                        <th>Heading</th>
+                                        <th>Status</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subcategory in subcategories %}
+                                    <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ subcategory.name }}
+                                        </td>
+                                        <td>
+                                            {{ subcategory.heading }}
+                                        </td>
+                                        <td class="is-active">
+                                            {% if subcategory.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                            {%else%}
+                                            <span class="badge bg-danger">Deactive</span>
+                                            {% endif %}
+                                        </td>
+
+                                        {% if request.user.user_type == "SUPERADMIN" %}
+                                            <td>
+                                                <a href="{% url 'update_subcategory' subcategory.id %}" class="mx-1">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a>
+                                                <a href="{% url 'view_subcategory_detail' subcategory.id %}" class="mx-1">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a>
+                                                <form method="POST" action="{% url 'delete_subcategory' %}" class="mx-1" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="subcategory" value="{{ subcategory.id }}">
+                                                </form>
+                                                {% comment %}<a href="#" class="delete-subcategory">
+                                                    <span class="fa-fw select-all fas"></span>{% endcomment %}
+                                                </a>
+                                            </td>
+                                        {% endif %}
+
+                                        {% if request.user.user_type == "SUBADMIN" %}
+                                            <td>
+                                                {% for i in m_check %}
+                                                    {% if i.edit == True %}
+                                                        <a href="{% url 'update_subcategory' subcategory.id %}" class="mx-1">
+                                                            <span class="fa-fw select-all fas"></span>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if i.view == True and request.user.user_type == "SUBADMIN" %}
+                                                        <a href="{% url 'view_subcategory_detail' subcategory.id %}" class="mx-1">
+                                                            <span class="fa-fw select-all fas"></span>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if i.delete == True and request.user.user_type == "SUBADMIN" %}
+                                                        <form method="POST" action="{% url 'delete_subcategory' %}" class="mx-1" style="display: inline;">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="subcategory" value="{{ subcategory.id }}">
+                                                        </form>
+                                                        {% comment %} <a href="#" class="delete-subcategory">
+                                                            <span class="fa-fw select-all fas"></span>{% endcomment %}
+                                                        </a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="text-center">
+                                <strong style="font-size: 1.5em;">No Records</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'adminpanel/data-table/dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('.delete-subcategory').on('click', function (e) {
+            form = $(this).siblings("form")
+            Swal.fire({
+                title: 'Delete SubCategory',
+                text: 'Are You Sure ?',
+                confirmButtonColor: 'rgb(225, 0, 127)',
+                showCancelButton: true,
+                customClass: 'delete-subcat'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            })
+        })
+    })
+</script>
+{% endblock script %}

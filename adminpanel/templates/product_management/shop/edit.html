@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/image-preview/image-preview.css' %}">
+{% endblock css %}
+
+{% block content %}
+
+{% url 'view_shop_products' as view_shop_products %}
+{% include "includes/section.html" with page_title="Edit Shop Product" btn_url=view_shop_products btn_text="Back" %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="POST" class="row" id="myForm" enctype="multipart/form-data" onsubmit="subForm()">
+                            {% csrf_token %}
+                            <div class="col-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Name*</label>
+                                        <input type="text" class="form-control" placeholder="Product Name" name="name"
+                                            value="{{ shop_product.name }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Original Price*</label>
+                                        <input type="text" class="form-control" placeholder="original price"
+                                            name="original_price" id="original_price" value="{{ shop_product.original_price }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Offer Price*</label>
+                                        <input type="text" class="form-control" placeholder="offer price" name="offer_price" value="{{ shop_product.offer_price }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Alt Text*</label>
+                                        <input type="text" class="form-control" placeholder="Alternate text"
+                                            name="alt_text" value="{{ shop_product.alt_text }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Title*</label>
+                                        <input type="text" class="form-control" placeholder="Og title" name="og_title"
+                                            value="{{ shop_product.og_title }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Product Country Title</label>
+                                        <input type="text" value="{{ shop_product.product_country_title }}" class="form-control" placeholder="Enter Description Title"
+                                         name="product_country_title">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Description*</label>
+                                        <textarea class="form-control" name="og_description" required>{{ shop_product.og_description|safe }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Description Title</label>
+                                        <input type="text" value="{{ shop_product.description_title }}" class="form-control" placeholder="Enter Description Title"
+                                         name="description_title">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Description*</label>
+                                        <textarea class="form-control" name="description" required>{{ shop_product.description|safe }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label>Weight* (In ounces)</label>
+                                    <input type="text" class="form-control" name="weight" value="{{ shop_product.weight }}" required>
+                                </div>
+
+                                {% comment %} <div class="row">
+                                    <div class="col-6 form-group">
+                                        <label>Color</label>
+                                        <input type="color" class="form-control" name="color" value="{{ shop_product.color }}" required>
+                                    </div>
+                                    <div class="col-6 form-group">
+                                        <label>Size</label>
+                                        <input type="text" class="form-control" name="size" value="{{ shop_product.size }}" required>
+                                    </div>
+                                </div> {% endcomment %}
+
+                                <div class="col-md-12 form-group js_if_shop">
+                                    <label>Status</label>
+                                    <select class="form-select" name="is_active" required>
+                                        <option value="">Please Select</option>
+                                        <option value="True" {% if shop_product.is_active %} selected {% endif %}>
+                                            Active
+                                        </option>
+                                        <option value="False" {% if not shop_product.is_active %} selected {% endif %}>Deactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="row p-0 m-0">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Quantity</label>
+                                            <input type="text" class="form-control" value="{{ shop_product.quantity }}" placeholder="Quantity" name="quantity" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 p-0">
+                                        <label>Subcategory</label>
+                                        <fieldset class="form-group">
+                                            <select class="form-select" name="subcategory" id="sub-category" required>
+                                                <option value="" disabled selected>Select Subcategory</option>
+                                                {% for subcategory in subcategories %}
+                                                <option value="{{ subcategory.id }}" {% if shop_product.subcategory.id == subcategory.id %} selected {% endif %}>
+                                                    {{ subcategory.name }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </fieldset>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label>Collection</label>
+                                        <select class="form-select" name="collection" required>
+                                            <option value="">Select Collection</option>
+                                            {% for collection in collections %}
+                                            <option value="{{ collection.id }}" {% if shop_product.product_collection.id == collection.id %} selected {% endif %}>{{ collection.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Country Title</label>
+                                            <input type="text" value="{{ shop_product.country_title }}" class="form-control" placeholder="e.g. Where is USA" name="country_title">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label>Country</label>
+                                        <select class="form-select" name="country">
+                                            <option value="">Select Country</option>
+                                            {% for country in countries %}
+                                            <option value="{{ country.id }}" {% if shop_product.country_id == country.id %} selected {% endif %}>{{ country.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12" id="notes">
+                                    <div class="form-group">
+                                        <label>Notes</label>
+                                        <textarea value="" name="editor">{{ shop_product.notes }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <p>Recommended Image Size: 272 x 309</p>
+                                        <label>Primary Image</label>
+                                        <input type="file" class="form-control" name="primary_image" data-allow-reorder="true" accept="image/png, image/gif, image/jpeg"
+                                        id="primary_image_file" onchange="image_preview('primary_image_file', 'primary_image', event)">
+                                        <span class="primary_image">
+                                            <img class="imageThumb" src="{{ shop_product_image.primary_img.url }}" />
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Image</label>
+                                        <input type="file" class="form-control" name="og_image" data-allow-reorder="true" accept="image/png, image/gif, image/jpeg" id="og_image_file" onchange="image_preview('og_image_file', 'og_image', event)">
+                                        <span class="og_image">
+                                            <img class="imageThumb" src="{{ shop_product_image.og_img.url }}" />
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Images <small>(max: 5)</small></label>
+                                        <input type="file" id="files" class="form-control" name="product_images" accept="image/png, image/gif, image/jpeg"  multiple />
+                                        {% for product_img in product_imgs %}
+                                        {% if product_img.images %}
+                                        <span class="pip">
+                                            <img class="imageThumb" src="{{ product_img.images.url }}" />
+                                            <br />
+                                            <span class="remove" data-id="{{ product_img.id }}">x</span>
+                                        </span>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div> 
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <button id="formSubmit" class="btn btn-primary me-1 mb-1 float-end">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.19.1/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+    CKEDITOR.replace('description');
+    CKEDITOR.replace('og_description');
+</script>
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+<script src="{% static 'adminpanel/jquery_validation/validate.js' %}"></script>
+<script src="{% static 'adminpanel/image-preview/image-preview.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        if (window.File && window.FileList && window.FileReader) {
+            $(".remove").click(function () {
+                let id = $(this).data('id')
+                $.ajax({
+                    url: "{% url 'delete_shop_product_image' %}",
+                    data: {
+                        id: id
+                    },
+                    method: "POST",
+                    success: function (response) {
+
+                    }
+                })
+                $(this).parent(".pip").remove();
+            });
+        } else {
+            alert("Your browser doesn't support to File API")
+        }
+    });
+</script>
+{% endblock script %}

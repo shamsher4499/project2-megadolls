@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content%}
+
+{% url 'view_collections' as view_collections %}
+{% include "includes/section.html" with page_title="Add Collection" btn_url=view_collections btn_text="Back" %}
+
+<section id="basic-vertical-layouts">
+    <div class="row match-height m-auto">
+        <div class="col-md-12 col-12 p-0">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form class="form form-vertical" method="POST" id="myForm">
+                            {% csrf_token %}
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="name">Name*</label>
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control" id="name" name="name"  required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="priority">Priority*</label>
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control" id="priority" name="priority" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% comment %} <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="permalink">Permalink</label>
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control" id="permalink" name="permalink">
+                                            </div>
+                                        </div>
+                                    </div> {% endcomment %}
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="category">Category</label>
+                                            <div class="position-relative">
+                                                <input type="text" class="form-control" id="category" name="category" value="Shop" required disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 form-group">
+                                        <label>Status</label>
+                                        <select class="form-select" name="is_active" required>
+                                            <option value="" disabled selected>Please Select</option>
+                                            <option value="True">Active</option>
+                                            <option value="False">Deactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-primary me-1 mx -3 mb-1 show-loader">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content%}
+
+{% block script %}
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+<script src="{% static 'adminpanel/jquery_validation/validate.js' %}"></script>
+{% endblock script %}

@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock title %}
+{% load static %}
+
+{% block content %}
+
+{% url 'view_imagine_products' as view_imagine_products %}
+{% include "includes/section.html" with page_title="View Product Detail" btn_url=view_imagine_products btn_text="Back" %}
+
+<main class="main content-wrapper container">
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered text-center">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab"
+                                    data-bs-target="#profile-overview">Product Details</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-4 label">
+                                       <label for="" class="view-label">Name</label>
+                                       <span class="view-label-value">{{ imagine_product.name }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">
+                                        <label for="" class="view-label">Category</label>
+                                        <span class="view-label-value">{{ imagine_product.subcategory.category.name }}</span>
+                                    </div>
+                                
+                                    <div class="col-lg-3 col-md-4 label">
+                                        <label for="" class="view-label">Subcategory</label>
+                                        <span class="view-label-value">{{ imagine_product.subcategory }}</span>
+                                    </div>
+
+                                    {% if imagine_product.product_color_id %}
+                                    <div class="col-lg-6 col-md-4 label">
+                                        <label for="" class="view-label">Play</label>
+                                        <span class="view-label-value">{{ imagine_product.product_color.name }}</span>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if imagine_product.dress_type_id %}
+                                    <div class="col-lg-6 col-md-4 label">
+                                        <label for="" class="view-label">Create</label>
+                                        <span class="view-label-value">{{ imagine_product.dress_type.name }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-4 label">
+                                        <label for="" class="view-label">Alt Text</label>
+                                        <span class="view-label-value">{{ imagine_product.alt_text }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-4 label">
+                                        <label for="" class="view-label">Og Title</label>
+                                        <span class="view-label-value">{{ imagine_product.og_title }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-4 label">
+                                        <label for="" class="view-label">Og Description</label>
+                                        <span class="view-label-value">{{ imagine_product.og_description }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-4 label">
+                                        <label for="" class="view-label">Description</label>
+                                        <span class="view-label-value">{{ imagine_product.description }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                {% if imagine_product_images.primary_img %}
+                <div class="card">
+                    <div class="card-body profile-card d-flex flex-column ">
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">
+                                    Primary And Og Image
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <img src="{{ imagine_product_images.primary_img.url }}" class="click-img"
+                                            alt="primary image" width="170" height="170">
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="{{ imagine_product_images.og_img.url }}" class="click-img" alt="og image"
+                                            width="170" height="170">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            
+                {% if imagine_product_images.pdf_img %}
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered text-center">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">
+                                    PDF Instruction
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-8">
+                                        <a href="{{ imagine_product_images.pdf_img.url }}" class="btn btn-pink" target="_blank"
+                                            download="instruction">View Instruction</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered text-center">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">
+                                    Product Images
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="row">
+                                    <div class="tab-content pt-4">
+                                        <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                            <div class="row">
+                                                {% for product_img in product_imgs %}
+                                                <div class="col-2">
+                                                    <img src="{{ product_img.images.url }}" class="click-img" alt="img1" width="150px" height="150">
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'datetime-picker/jquery.datetimepicker.min.css' %}" />
+<link rel="stylesheet" href="{% static 'vendors/sweetalert2/sweetalert2.min.css' %}">
+<link rel="stylesheet" href="{% static 'vendors/choices.js/choices.min.css' %}" />
+
+{% endblock css %}
+
+{% block content%}
+
+{% url 'social_media_link' as links %}
+{% include "includes/section.html" with page_title="Add Link" btn_url=links btn_text="Back" %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" class="" id="myForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control" placeholder="Enter Heading for Blog" name="title" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>URL</label>
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control" placeholder="Enter Heading for Blog" name="url" required>
+                                    </div>
+                                </div>
+                            </div>   
+                           <div class="col-6">
+                                <div class="form-group">
+                                    <label>Icon</label>
+                                    <input type="file" class="form-control" accept="image/png, image/gif, image/jpeg" name="image">
+                                </div>
+                            </div>
+                            <div class="col-6 form-group">
+                                <label>Status</label>
+                                <select class="form-select" name="is_active" id="js-publish">
+                                    <option value="True" {% if data.is_publish %} selected {% endif %}>Active</option>
+                                    <option value="False" {% if data.is_publish == False %} selected {% endif %}>Deactive</option>
+                                </select>
+                            </div>                           
+                           <div class="col-12 d-flex justify-content-end mt-3">
+                                <button type="submit" class="btn btn-primary me-1 mb-1" id="formSubmit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content%}
+
+{% block script %}
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#myForm").validate({
+            rules: {
+                title: {
+                    required: true,
+                    text: true,
+                    maxlength: 55
+                },
+                url: {
+                    required: true,
+                    text: true,
+           
+                },
+                image: {
+                    required: true,
+                    text: true,
+           
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    })
+</script>
+{% endblock script %}

@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/image-preview/image-preview.css' %}">
+<link rel="stylesheet" href="{% static 'adminpanel/vendors/choices.js/choices.min.css' %}" />
+{% endblock css %}
+
+{% block content %}
+
+{% url 'view_imagine_products' as view_imagine_products %}
+{% include "includes/section.html" with page_title="Edit Imagine Product" btn_url=view_imagine_products btn_text="Back" %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="POST" class="row" id="myForm" enctype="multipart/form-data" onsubmit="subForm()">
+                            {% csrf_token %}
+                            <div class="col-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Name*</label>
+                                        <input type="text" class="form-control" placeholder="Product Name" name="name"
+                                            value="{{ imagine_product.name }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Alt Text*</label>
+                                        <input type="text" class="form-control" placeholder="Alternate text"
+                                            name="alt_text" value="{{ imagine_product.alt_text }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Title*</label>
+                                        <input type="text" class="form-control" placeholder="Og title" name="og_title"
+                                            value="{{ imagine_product.og_title }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Description*</label>
+                                        <textarea class="form-control" name="og_description">{{ imagine_product.og_description|safe }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Description*</label>
+                                        <textarea class="form-control" name="description">{{ imagine_product.description|safe }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label>Status</label>
+                                    <select class="form-select" name="is_active" required>
+                                        <option value="">Please Select</option>
+                                        <option value="True" {% if imagine_product.is_active %} selected {% endif %}>Active</option>
+                                        <option value="False" {% if not imagine_product.is_active %} selected {% endif %}>Deactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="row p-0 m-0">
+                                    <div class="col-md-6 form-group p-0">
+                                        <label>Subcategory*</label>
+                                        <select class="form-select" name="subcategory" id="sub-category" required>
+                                            <option value="" disabled selected>Please Select</option>
+                                            {% for subcategory in subcategories %}
+                                            <option value="{{ subcategory.id }}" {% if imagine_product.subcategory.id == subcategory.id %} selected {% endif %}>
+                                                {{ subcategory.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    {% if imagine_product.dress_type %}
+                                    <div class="col-md-6 form-group p-0 js-subcat" id="sub_dress">
+                                        <label>Create*</label>
+                                        <select class="form-select" name="dress_type" id="dress-type" required>
+                                            <option value="">Please Select</option>
+                                            {% for dress_type in dress_types %}
+                                            <option value="{{ dress_type.id }}" {% if imagine_product.dress_type.id == dress_type.id %} selected {% endif %}>{{ dress_type.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if imagine_product.product_color %}
+                                    <div class="col-md-6 form-group p-0 js-subcat" id="sub_color">
+                                        <label>Play*</label>
+                                        <select class="form-select" name="color" id="color" required>
+                                            <option value="">Please Select</option>
+                                            {% for color in colors %}
+                                            <option value="{{ color.id }}" {% if imagine_product.product_color.id == color.id %} selected {% endif %}>{{ color.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-12 form-group">
+                                    <label>Related Products</label>
+                                    <select class="choices form-select multiple-remove" multiple="multiple" name="related_products[]">
+                                        {% for related_product in related_products %}
+                                        <option value="{{ related_product.id }}" {% if related_product.id in product_list %} selected {% endif %}>{{ related_product.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+
+                            <div class="col-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Primary Image</label>
+                                        <input type="file" class="form-control" name="primary_image" id="primary_image_file" data-allow-reorder="true" accept="image/png, image/gif, image/jpeg" onchange="image_preview('primary_image_file', 'primary_image', event)">
+                                        <small>Recommended Image Size: 272 x 309</small><br>
+                                        <span class="primary_image">
+                                            <img class="imageThumb"  src="{{ imagine_product_image.primary_img.url }}" />
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Pdf Image</label>
+                                        <input type="file" class="form-control" name="pdf_image" data-allow-reorder="true" accept="application/pdf">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Image</label>
+                                        <input type="file" class="form-control" id="og_image_file" name="og_image" data-allow-reorder="true" accept="image/png, image/gif, image/jpeg" onchange="image_preview('og_image_file', 'og_image', event)">
+                                        <span class="og_image">
+                                            <img class="imageThumb" src="{{ imagine_product_image.og_img.url }}" />
+                                            <br />
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Images <small>(max: 5)</small></label>
+                                        <input type="file" id="files" class="form-control" name="product_images"
+                                            accept="image/png, image/gif, image/jpeg" multiple />
+                                        {% for product_img in product_imgs %}
+                                        {% if product_img.images %}
+                                        <span class="pip">
+                                            <img class="imageThumb" src="{{ product_img.images.url }}" />
+                                            <br />
+                                            <span class="remove" data-id="{{ product_img.id }}">x</span>
+                                        </span>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <button id="formSubmit" class="btn btn-primary me-1 mb-1 float-end">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.19.1/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('description');
+    CKEDITOR.replace('og_description');
+</script>
+<script src="{% static 'adminpanel/vendors/choices.js/choices.min.js' %}"></script>
+<script src="{% static 'adminpanel/js/pages/form-element-select.js' %}"></script>
+
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+<script src="{% static 'adminpanel/jquery_validation/validate.js' %}"></script>
+<script src="{% static 'adminpanel/image-preview/image-preview.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        if (window.File && window.FileList && window.FileReader) {
+            $(".remove").click(function () {
+                let id = $(this).data('id')
+                $.ajax({
+                    url: "{% url 'delete_imagine_product_image' %}",
+                    data: {
+                        id: id
+                    },
+                    method: "POST",
+                    success: function(response) {
+
+                    }
+                })
+                $(this).parent(".pip").remove();
+            });
+        } else {
+            alert("Your browser doesn't support to File API")
+        }
+
+        $(document).on('change', '#sub-category, #dress-type, #color', function () {
+            let subcat = $.trim($('#sub-category option:selected').text())
+            let mycreate = $.trim($('#dress-type').val())
+            let myplay = $.trim($('#color').val())
+            let html = ''
+            if (subcat == 'Play' || subcat == 'Create') {
+                if (subcat == 'Play') {
+                    $('#sub_dress').hide()
+                    $('#sub_color').show()
+                }
+                else {
+                    $('#sub_dress').show()
+                    $('#sub_color').hide()
+                }
+            } else {
+                if (!myplay) {
+                    $('#sub_dress').show()
+                    $('#sub_color').hide()
+                }
+                else {
+                    $('#sub_dress').hide()
+                    $('#sub_color').show()
+                }
+            }
+        })
+    });
+</script>
+{% endblock script %}

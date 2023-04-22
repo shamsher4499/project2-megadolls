@@ -1,0 +1,16 @@
+adminpanel/__pycache__
+adminpanel/migrations/__pycache__
+adminpanel/migrations
+megadolls/__pycache__
+db.sqlite31
+nohup.out
+web_app/__pycache__
+web_app/migrations/__pycache__
+.vscode
+# settings.py
+.env
+#sloper
+sloper/__pycache__
+sloper/migrations/__pycache__
+__pycache__
+test.py

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock title %}
+{% load static %}
+
+{% block content %}
+
+
+{% url 'view_collections' as view_collections %}
+{% include "includes/section.html" with page_title="View Collection Detail" btn_url=view_collections btn_text="Back" %}
+
+<main class="main content-wrapper container">
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered text-center">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Collection Detail</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Name</label>
+                                    <span class="view-label-value">{{ collection.name }}</span>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">
+                                        <label for="" class="view-label">Category</label>
+                                        <span class="view-label-value">
+                                            {{ collection.category.name }}
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-3 col-md-4 label">
+                                        <label for="" class="view-label">Priority</label>
+                                        <span class="view-label-value">
+                                            {{ collection.priority }}
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-3 col-md-4 label">
+                                        <label for="" class="view-label">Status</label>
+                                        <span class="view-label-value">
+                                            {% if collection.is_active %}
+                                                Active
+                                            {% else %}
+                                                deactive
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {% comment %} <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Permalink</label>
+                                    <span class="view-label-value">{{ collection.permalink }}</span>
+                                </div> {% endcomment %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

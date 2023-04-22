@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock title %}
+{% load static %}
+
+{% block content %}
+
+{% url 'view_guest_user_order' as guest_order %}
+{% include "includes/section.html" with page_title="View Guest Customer Order Detail" btn_url=guest_order btn_text="Back" %}
+
+<section class="container">
+    <div class="card">
+        <div class="card-body pt-3">
+            <div class="tab-content">
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Name</label>
+                                    <span class="view-label-value">{{ order.shipping_address.name }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Email</label>
+                                    <span class="view-label-value">{{ order.email }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Zipcode</label>
+                                    <span class="view-label-value">{{ order.shipping_address.zipcode }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">City</label>
+                                    <span class="view-label-value">{{ order.shipping_address.city }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">State</label>
+                                    <span class="view-label-value">{{ order.shipping_address.state }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Country</label>
+                                    <span class="view-label-value">{{ order.shipping_address.country }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Order Date</label>
+                                    <span class="view-label-value">{{ order.order_at|date:'Y-m-d' }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Delivery Date</label>
+                                    <span class="view-label-value">{{ order.delivered_at|date:'Y-m-d' }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Order Reciept</label>
+                                    <span class="view-label-value">
+                                        <a href="{{ order.stripe_payment_data.reciept_url }}">View Reciept</a>
+                                    </span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Shipping Charge</label>
+                                    <span class="view-label-value">$ {{ order.shipping_charge }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Tax</label>
+                                    <span class="view-label-value">$ {{ order.tax }}</span>
+                                </div>
+                                <div class="col-lg-4 col-md-4 label">
+                                    <label for="" class="view-label">Total Amount</label>
+                                    <span class="view-label-value">$ {{ order.stripe_payment_data.amount }}</span>
+                                </div>
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Order Id</label>
+                                    <span class="view-label-value">{{ order.order_id }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row border-bottom border-top pt-3 my-3">
+                        <div class="col-lg-4 col-md-4 label">
+                            <label class="view-label">Product Name</label>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <label class="view-label">Per Unit Price</label>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <label class="view-label">Quantity</label>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <label class="view-label">Amount</label>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <label class="view-label">Subcategory</label>
+                        </div>
+                    </div>
+                    {% for i in order.order_detail %}
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 label">
+                            <span class="view-label-value">{{ i.name }}</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <span class="view-label-value">{{ i.price }}</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <span class="view-label-value">x {{ i.quantity }}</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <span class="view-label-value">{{ i.amount }}</span>
+                        </div>
+                        <div class="col-lg-2 col-md-4 label">
+                            <span class="view-label-value">{{ i.subcategory }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+

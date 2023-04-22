@@ -1,0 +1,68 @@
+{% extends 'web_app_base.html' %}
+{% include 'includes/head.html' %}
+{% load static %}
+{% block title %}Update Mobile{% endblock title %}
+{% block content %}
+<style>
+    #GFG {
+        text-decoration: none;
+        text-align:left;
+        color: #E75480;   
+    }
+</style>
+<div class="wraper-inner">
+    <section class="page-head-sec pt-5">
+        <img class="page-shape-left" src="{% static 'web_app/images/cms-head-left.svg' %}">
+        <img class="page-shape-right" src="{% static 'web_app/images/cms-head-right.svg' %}">
+        <div class="container">
+            <div class="page-head-content">
+                <h4>My Account</h4>
+            </div>
+        </div>
+    </section>
+    <section class="shops-list-sec">
+        <div class="container">
+            <div class="my-account account-subscription">
+                <div class="my-account-R">
+                    <div class="row">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <form role="form" action="{% url 'mobile_update' new_mobile %}" method="POST" class="mt-5 mb-5 login-input"
+                                    enctype="multipart/form-data">
+                                    {% csrf_token %}  
+                                    <div class="form-group">
+                                        <input class="form-control" type="hidden" name="mobile"
+                                            value="{{ new_mobile }}">
+                                    </div>
+                                        <h6>Please enter OTP sent to your new mobile number to verify</h6>
+                                        <br>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="otp"
+                                                value="{{ otp }}" placeholder="Enter OTP" >
+                                        </div>
+                                    <button type="submit" class="btn btn-primary">Verify</button>
+                                </form>
+                                <a id = "GFG" href="{% url 'resend_otp_mobile' new_mobile %}"><p>Resend OTP</p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    function image_preview(id, element_class, e) 
+    {
+    let f = e.target.files[0]
+    const fileReader = new FileReader();
+    fileReader.onload = (function (e) 
+    {
+        const file = e.target;
+        $('.' + element_class).html("<img class=\"imageThumb\" id='" + id + "' src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>")
+    }
+    );
+    fileReader.readAsDataURL(f);
+    }
+</script>
+{% endblock content %}

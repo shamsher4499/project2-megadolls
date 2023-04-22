@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/image-preview/image-preview.css' %}">
+{% endblock css %}
+{% block content %}
+
+{% url 'view_colors' as view_colors %}
+{% include "includes/section.html" with page_title="Edit Play Category" btn_url=view_colors btn_text="Back" %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="POST" class="row" id="myForm" enctype=multipart/form-data>
+                            {% csrf_token %}
+                            <div class="col-6">
+                                <div class="col-12 form-group">
+                                    <label for="name">Name*</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ data.name }}" required>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="description">Description*</label>
+                                    <textarea class="form-control" id="description" name="description"
+                                        required>{{ data.description }}</textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Product Detail Description*</label>
+                                        <textarea value="" name="editor" required>{{ data.detail_description }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="priority">Priority*</label>
+                                    <input type="text" class="form-control" id="priority" name="priority"
+                                        value="{{ data.priority }}" required>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="meta_title">Meta Title*</label>
+                                    <textarea class="form-control" id="meta_title" name="meta_title"
+                                        required>{{ data.meta_title }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="meta_description">Meta Description*</label>
+                                    <textarea class="form-control" id="meta_description" name="meta_description"
+                                        required>{{ data.meta_description }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="meta_keyword">Meta Keyword*</label>
+                                    <textarea class="form-control" id="meta_keyword" name="meta_keyword"
+                                        required>{{ data.meta_keyword }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="og_title">Og Title*</label>
+                                    <textarea class="form-control" id="og_title" name="og_title"
+                                        required>{{ data.og_title }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="og_description">Og Description*</label>
+                                    <textarea class="form-control" id="og_description" name="og_description"
+                                        required>{{ data.og_description }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="text_color">Text Color</label>
+                                    <input type="color" class="form-control" id="text_color" name="text_color"
+                                        value="{{ data.text_color }}" required>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="image_color_code">Image Color Code</label>
+                                    <input type="color" class="form-control" id="image_color_code"
+                                        name="image_color_code" value="{{ data.image_color_code }}" required>
+                                </div>
+
+                                {% comment %} <div class="col-12 form-group">
+                                    <label for="permalink">Permalink</label>
+                                    <input type="text" class="form-control" id="permalink" name="permalink"
+                                        value="{{ data.permalink }}">
+                                </div> {% endcomment %}
+
+                                <div class="col-12 form-group">
+                                    <label for="status">Status*</label>
+                                    <select class="form-select" id="status" name="is_active" required>
+                                        <option value="" disabled selected>Please Select</option>
+                                        <option value="True" {% if data.is_active %} selected {% endif %}>
+                                            Active
+                                        </option>
+                                        <option value="False" {% if data.is_active == False %} selected {% endif %}>
+                                            Deactive
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Thumbnail Image</label>
+                                        <input type="file" class="form-control" name="thumbnail_image"
+                                            accept="image/png, image/gif, image/jpeg" onchange="image_preview('thumbnail_image_file', 'thumbnail_image', event)" id="thumbnail_image_file">
+                                        {% if data.thumbnail_img %}
+                                        <span class="thumbnail_image">
+                                            <img class="imageThumb" src="{{ data.thumbnail_img.url }}" />
+                                            <br />
+                                        </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Play Banner Image</label>
+                                        <input type="file" class="form-control" name="banner_image"
+                                            accept="image/png, image/gif, image/jpeg" onchange="image_preview('banner_image_file', 'banner_image', event)" id="banner_image_file">
+                                        {% if data.banner_img %}
+                                        <span class="banner_image">
+                                            <img class="imageThumb" src="{{ data.banner_img.url }}" />
+                                            <br />
+                                        </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Og Image</label>
+                                        <input type="file" class="form-control" name="og_image"
+                                            accept="image/png, image/gif, image/jpeg" onchange="image_preview('og_image_file', 'og_image', event)" id="og_image_file">
+                                        {% if data.og_img %}
+                                        <span class="og_image">
+                                            <img class="imageThumb" src="{{ data.og_img.url }}" />
+                                            <br />
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary me-1 mb-1 float-end">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.19.1/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+</script>
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+<script src="{% static 'adminpanel/templates/subcategory/validation.js' %}"></script>
+<script src="{% static 'adminpanel/image-preview/image-preview.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        if (window.File && window.FileList && window.FileReader) {
+            $(".remove").click(function () {
+                let id = $(this).data('id')
+                $.ajax({
+                    url: "{% url 'delete_shop_product_image' %}",
+                    data: {
+                        id: id
+                    },
+                    method: "POST",
+                    success: function (response) {
+
+                    }
+                })
+                $(this).parent(".pip").remove();
+            });
+        } else {
+            alert("Your browser doesn't support to File API")
+        }
+    });
+</script>
+{% endblock script %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.min.css' %}">
+{% endblock css %}
+
+{% block content%}
+{% include "includes/section.html" with page_title="Edit Sloper Landing Page"  %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12 mb-5">
+            <div class="card">
+                <form method="POST" class="card-body" id="myForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-12 mb-5">
+                            <div class="form-group">
+                                <h6>Title</h6>
+                                <input value="{{ how_it_work.title }}" name="title" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-5">
+                            <div class="form-group">
+                                <h6>Description</h6>
+                                <textarea name="description" class="form-control" required>{{ how_it_work.description }}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary me-1 mb-1 float-end" id="formSubmit">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content%}
+
+{% block script %}
+<script src="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'adminpanel/vendors/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+<script>
+    $('#formSubmit').on('click', function (e) {
+            e.preventDefault()
+            let id = $(this).data('id')
+            Swal.fire({
+                title: 'Update Content',
+                text: 'Are You Sure ?',
+                confirmButtonColor: 'rgb(225, 0, 127)',
+                showCancelButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#myForm").submit();
+                }
+            })
+        })
+
+    $("#myForm").validate({
+        rules: {
+            heading: {
+                required: true,
+                maxlength: 55
+            },
+            editor: {
+                required: true,
+            },
+            posted_by: {
+                required: true,
+                maxlength: 55
+            },
+            category: {
+                required: true,
+            },
+            subcategory: {
+                required: true,
+            }
+        }
+    });
+</script>
+{% endblock script %}

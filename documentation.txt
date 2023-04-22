@@ -1,0 +1,93 @@
+Product Management:-
+1) Product Shop     2) Product Imagine
+
+_______________________________________________________________________________________________
+1) Product Shop => 
+Operations :=) 
+a] Add      b] Edit     c] Delete       d] View
+
+a] Add - we can add product which belongs to Shop (in e-commerce website) 
+================================================================================================
+Required Fields :- 
+- Name -> Product Name.
+
+- Original Price -> actual price of product and this must me greater than offer price.
+- Offer Price -> if this price is given then customer buy product on this price
+[ Note ] ==> If offer price 0.00 then product price would be original price
+
+- Alt Text 
+- Og Title
+- Weight
+- Quantity
+
+- Subcategory ->
+Operation :=) Edit, View
+Find =) Shop > Shop Category
+i) Dolls
+ii) Post Cards
+iii) Shero Cards
+
+- Collection ->
+Operation :=) Add, Edit, View, Delete
+Find =) Shop > Collection
+
+- Country ->
+Operation :=) Add, Edit, View, Delete
+Find =) Settings > Countries
+
+- Primary Image ->
+accept ony => png, jpg, jpeg
+=================================================================================================
+Non Required Fields :-
+- Og Description
+- Description
+- Notes
+- Og Image
+- Images (max = 5)
+==================================================================================================
+________________________________________________________________________________________________________________________________________
+________________________________________________________________________________________________________________________________________
+1) Product Imagine => 
+Operations :=) 
+a] Add      b] Edit     c] Delete       d] View
+
+a] Add - we can add product which belongs to Shop (in e-commerce website) 
+================================================================================================
+Required Fields :- 
+- Name -> Product Name.
+
+- Original Price -> actual price of product and this must me greater than offer price.
+- Offer Price -> if this price is given then customer buy product on this price
+[ Note ] ==> If offer price 0.00 then product price would be original price
+
+- Alt Text 
+- Og Title
+- Weight
+- Quantity
+
+- Subcategory ->
+Operation :=) Edit, View
+Find =) Shop > Shop Category
+i) Dolls
+ii) Post Cards
+iii) Shero Cards
+
+- Collection ->
+Operation :=) Add, Edit, View, Delete
+Find =) Shop > Collection
+
+- Country ->
+Operation :=) Add, Edit, View, Delete
+Find =) Settings > Countries
+
+- Primary Image ->
+accept ony => png, jpg, jpeg
+=================================================================================================
+Non Required Fields :-
+- Og Description
+- Description
+- Notes
+- Og Image
+- Images (max = 5)
+==================================================================================================
+________________________________________________________________________________________________________________________________________

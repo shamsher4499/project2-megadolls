@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Megadolls| Error 404</title>
+    <link rel="icon" href="{% static  'web_app/images/favicon.png' %}" type="image/x-icon">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        #parent {
+            background-color: #ffdaee;
+            opacity: 0.8;
+            height: 100%;
+        }
+        #content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #ea047f;
+            width: 100%;
+            height: 100vh;
+            letter-spacing: 4px;
+            line-height: 2;
+        }
+        #content h1 {
+            font-size: 56px;
+        }
+        #content h2 {
+            font-size: 34px;
+        }
+        #content p, a {
+            font-size: 22px;
+            color: #ea047f;
+        }
+        #mega {
+            position: absolute;
+            left: 25%;
+            top: 10%;
+        }
+        #mega h1 {
+            color: #ea047f;
+            font-size: 8em;
+            opacity: 0.5;
+            letter-spacing: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="parent">
+        <div id="mega">
+            <h1>MEGADOLLS</h1>
+        </div>
+        <div id="content">
+            <h1>404 Error</h1>
+            <h2>Page Not Found</h2>
+            <p>
+                To Visit Our Website <a href="{{ site_url }}">Click Here</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

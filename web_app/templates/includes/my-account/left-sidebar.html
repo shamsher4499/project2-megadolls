@@ -1,0 +1,40 @@
+{% url 'web_profile' as profile %}
+{% url 'my_account_order' as order %}
+{% url 'view_favorites' as favorites %}
+{% url 'view_wishlist' as wishlist %}
+{% url 'my_account_subscription' as subscription %}
+{% url 'redeem_my_gift_card' as my_gift_card %}
+{% url 'my_account_address' as address %}
+{% url 'my_account_wallet' as wallet %}
+{% url 'my_account_referrals' as referrals %}
+<div class="my-account-L">
+    <ul class="myaccount-sidebar-list">
+        <li {% if request.path == profile %} class="active" {% endif %}>
+            <a href="{{ profile }}"><i class="ri-user-fill"></i>Profile</a>
+        </li>
+        <li {% if request.path == order %} class="active" {% endif %}>
+            <a href="{{ order }}"><i class="ri-shopping-cart-2-fill"></i> My Orders</a>
+        </li>
+        <li {% if request.path == favorites %} class="active" {% endif %}>
+            <a href="{{ favorites }}"><i class="ri-star-fill"></i>Favorites</a>
+        </li>
+        <li {% if request.path == wishlist %} class="active" {% endif %}>
+            <a href="{{ wishlist }}"><i class="ri-heart-fill"></i>Wishlist</a>
+        </li>
+        <li {% if request.path == subscription %} class="active" {% endif %}>
+            <a href="{{ subscription }}"><i class="ri-money-dollar-circle-line"></i>Subscription</a>
+        </li>
+        <li {% if request.path == my_gift_card %} class="active" {% endif %}>
+            <a href="{{ my_gift_card }}"><i class="ri-gift-fill"></i></i>Gift Card</a>
+        </li>
+        <li {% if request.path == address %} class="active" {% endif %}>
+            <a href="{{ address }}"><i class="ri-home-6-fill"></i>Addresses</a>
+        </li>
+        <li {% if request.path == referrals %} class="active" {% endif %}>
+            <a href="{{ referrals }}"><i class="ri-links-fill"></i>Referrals</a>
+        </li>
+        <li {% if request.path == wallet %} class="active" {% endif %}>
+            <a href="{{ wallet }}"><i class="ri-wallet-fill"></i>Wallet</a>
+        </li>
+    </ul>
+</div>

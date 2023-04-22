@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock title %}
+{% load static %}
+
+{% block content %}
+
+{% url 'view_colors' as view_colors %}
+{% include "includes/section.html" with page_title="View Play Category Detail" btn_url=view_colors btn_text="Back" %}
+
+
+<main class="main content-wrapper container">
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <ul class="nav nav-tabs nav-tabs-bordered text-center">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab"
+                                    data-bs-target="#profile-overview">Product
+                                    Details</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-4 label">
+                                        <label for="" class="view-label">Name</label>
+                                        <span class="view-label-value">{{ color.name }}</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-4 label">
+                                        <label for="" class="view-label">Status</label>
+                                        <span class="view-label-value">
+                                            {% if color.is_active %}
+                                            Active
+                                            {% else %}
+                                            Deactive
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Description</label>
+                                    <span class="view-label-value">{{ color.description }}</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Product Detail Description</label>
+                                    <span class="view-label-value">{{ color.detail_description|safe }}</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Meta Title</label>
+                                    <span class="view-label-value">{{ color.meta_title }}</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Meta Description</label>
+                                    <span class="view-label-value">{{ color.meta_description }}</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Meta Keyword</label>
+                                    <span class="view-label-value">{{ color.meta_keyword }}</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Og Title</label>
+                                    <span class="view-label-value">{{ color.og_title }}</span>
+                                </div>
+
+                                <div class="col-lg-12 col-md-4 label">
+                                    <label for="" class="view-label">Og Description</label>
+                                    <span class="view-label-value">{{ color.og_description }}</span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-4 label">
+                                        <label for="" class="view-label">Priority</label>
+                                        <span class="view-label-value">{{ color.priority }}</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-4 label">
+                                        <label for="" class="view-label">Url Slug</label>
+                                        <span class="view-label-value">{{ color.url_slug }}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if color.thumbnail_img or color.banner_img or color.og_img %}
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body profile-card d-flex flex-column ">
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">
+                                    Thumbnail And Banner And Og Image
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-4">
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <img src="{{ color.thumbnail_img.url }}" class="click-img" alt="thumbnail image"
+                                            width="170" height="170">
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="{{ color.banner_img.url }}" class="click-img" alt="banner image" width="170" height="170">
+                                    </div>
+                                    <div class="col-6">
+                                        <img src="{{ color.og_img.url }}" class="click-img" alt="og image" width="170" height="170">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </section>
+</main>
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}

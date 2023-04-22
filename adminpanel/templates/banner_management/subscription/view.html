@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/data-table/dataTables.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+
+{% comment %} {% url 'add_subscription' as add_subscription %} {% endcomment %}
+{% comment %} btn_url=add_subscription btn_text="Add Subscription" {% endcomment %}
+{% include "includes/section.html" with page_title="Subscriptions Page Management" %}
+
+<section class="section">
+    <div class="row w-100" id="table-striped">
+        <div class="col-12">
+            <div class="card py-2 px-2">
+                <div class="card-content">
+                    <div class="table-responsive p-2">
+                        {% if viewdata_sub %}
+                            <table class="table table table-striped text-center mb-0 text-center" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Sr no.</th>
+                                        <th>Title</th>
+                                        <th>Content</th>
+                                        <th style="width: 40%;">Image</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in viewdata_sub %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td class="text-bold-500">{{ i.title|safe}}</td>
+                                        <td class="text-bold-500">{{ i.content|safe|truncatechars:50}}</td>
+                                        <td>
+                                            {% if i.image %}
+                                                <img src="{{ i.image.url }}" style="width: 15%;" />
+                                            {% endif %}
+                                        </td>
+                                        {% if  request.user.user_type == "SUPERADMIN" %}
+                                            <td>  
+                                                <a href="{% url 'edit_subscription' i.id %}" class="mx-1 edit_slider">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a>
+                                                <a href="{% url 'view_detail_subscription' i.id %}" class="mx-1">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a> 
+                                                {% comment %} <a href="#" class="mx-1 btn-delete" data-id="{{ i.id }}">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a>    {% endcomment %}
+                                            </td>
+                                        {% endif %}
+                                        {% if request.user.user_type == "SUBADMIN" %}
+                                            <td>
+                                                {% for i in m_check %}
+                                                    {% if i.edit == True %}
+                                                        <a href="{% url 'edit_subscription' i.id %}" class="mx-1 edit_slider">
+                                                            <span class="fa-fw select-all fas"></span>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if i.view == True %}
+                                                        <a href="{% url 'view_detail_subscription' i.id %}" class="mx-1">
+                                                            <span class="fa-fw select-all fas"></span>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% comment %} {% if i.delete == True %}
+                                                        <a href="#" class="mx-1 btn-delete" data-id="{{ i.id }}">
+                                                            <span class="fa-fw select-all fas"></span>
+                                                        </a>
+                                                    {% endif %} {% endcomment %}
+                                                {% endfor %}
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="text-center">
+                                <strong style="font-size: 1.5em;">No Records</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} <form method="POST" action="{% url 'delete_subscription' %}" class="mx-1" style="display: inline;" id="delete_form">
+    {% csrf_token %}
+    <input type="hidden" name="subscription" value="" id="subscription">
+</form> {% endcomment %}
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'adminpanel/data-table/dataTables.min.js' %}"></script>
+{% comment %} <script>
+    $(document).ready(function() {
+        $('.btn-delete').on('click', function (e) {
+            e.preventDefault()
+            const ele = $(this)
+            let id = ele.data('id')
+            Swal.fire({
+            title: 'Delete Subscription Data',
+            text: 'Are You Sure ?',
+            confirmButtonColor: 'rgb(225, 0, 127)',
+            showCancelButton: true,
+        }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#subscription').val(id)
+                    $('#delete_form').submit()
+                }
+            })
+        })
+    })
+</script> {% endcomment %}
+{% endblock script %}

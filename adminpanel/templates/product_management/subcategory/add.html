@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% url 'view_subcategories' as view_subcategories %}
+{% include "includes/section.html" with page_title="Add Sub Category" btn_url=view_subcategories btn_text="Back" %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="POST" class="row" id="myForm" enctype=multipart/form-data>
+                            {% csrf_token %}
+                            <div class="col-6">
+                                <div class="col-12 form-group">
+                                    <label for="name">Name*</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ data.name }}" required>
+                                </div>
+                                
+                                <div class="col-12 form-group">
+                                    <label for="heading">Heading*</label>
+                                    <input type="text" class="form-control" id="heading" name="heading" value="{{ data.heading }}" required>
+                                </div>
+                                
+                                <div class="col-12 form-group">
+                                    <label for="description">Description*</label>
+                                    <textarea class="form-control" id="description" name="description" required>{{ data.description }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="meta_title">Meta Title*</label>
+                                    <textarea class="form-control" id="meta_title" name="meta_title" required>{{ data.meta_title }}</textarea>
+                                </div>
+                                
+                                <div class="col-12 form-group">
+                                    <label for="meta_description">Meta Description*</label>
+                                    <textarea class="form-control" id="meta_description" name="meta_description" required>{{ data.meta_description }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="meta_keyword">Meta Keyword*</label>
+                                    <textarea class="form-control" id="meta_keyword" name="meta_keyword" required>{{ data.meta_keyword }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="og_title">Og Title*</label>
+                                    <textarea class="form-control" id="og_title" name="og_title" required>{{ data.og_title }}</textarea>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="og_description">Og Description*</label>
+                                    <textarea class="form-control" id="og_description" name="og_description" required>{{ data.og_description }}</textarea>
+                                </div>
+
+                                {% comment %} <div class="col-12 form-group">
+                                    <label for="permalink">Permalink</label>
+                                    <input type="text" class="form-control" id="permalink" name="permalink" value="{{ data.permalink }}">
+                                </div> {% endcomment %}
+
+                                <div class="col-12 form-group">
+                                    <label for="priority">Priority*</label>
+                                    <input type="text" class="form-control" id="priority" name="priority" value="{{ data.priority }}" required>
+                                </div>
+
+                                <div class="col-12 form-group">
+                                    <label for="status">Status*</label>
+                                    <select class="form-select" id="status" name="is_active" required>
+                                        <option value="" disabled selected>Please Select</option>
+                                        <option value="True" {% if data.is_active %} selected {% endif %}>Active</option>
+                                        <option value="False" {% if data.is_active == False %} selected {% endif %}>Deactive</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Banner Image</label>
+                                        <input type="file" class="form-control" name="banner_image" 
+                                            accept="image/png, image/gif, image/jpeg" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Og Image</label>
+                                        <input type="file" class="form-control" name="og_image" 
+                                            accept="image/png, image/gif, image/jpeg" required>
+                                    </div>
+                                </div>
+                            </div>
+                              
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary me-1 mb-1 float-end">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'adminpanel/jquery_validation/jquery.validate.js' %}"></script>
+<script src="{% static 'adminpanel/templates/subcategory/validation.js' %}"></script>
+{% endblock script %}

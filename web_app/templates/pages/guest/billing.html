@@ -1,0 +1,335 @@
+{% extends 'web_app_base.html' %}
+{% load static %}
+
+{% block title %}Guest Billing{% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'adminpanel/intl-tel-input-master/build/css/intlTelInput.css' %}">
+{% include 'includes/ring-loader.html' %}
+<div class="wraper-inner">
+    <section class="page-head-sec">
+        <img class="page-shape-left" src="{% static 'web_app/images/cms-head-left.svg' %}">
+        <img class="page-shape-right" src="{% static 'web_app/images/cms-head-right.svg' %}">
+        <div class="container">
+            <div class="page-head-content">
+                <h4>Shipping & Billing Info</h4>
+            </div>
+        </div>
+    </section>
+    <section class="cart-inner-block">
+        <div class="container">
+            <div class="shipping-banner mb-4">
+                <img src="{% static 'web_app/images/shipping-bn.png' %}">
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="cart-detail-blk">
+                        {% if guest_user_address.shipping_address %}
+                            <div class="saved-address-blk mb-4">
+                                <div class="form-check custom-radio">
+                                    <input class="form-check-input" type="radio" name="saved-address" id="saved-address{{ forloop.counter }}" value="{{ guest_user_address.id }}" checked>
+                                    <label class="form-check-label" for="saved-address{{ forloop.counter }}">
+                                        <h4>{{ guest_user_address.shipping_address.name }}, {{ guest_user_address.shipping_address.area_name }}</h4>
+                                        <p>
+                                            {% comment %}{{ guest_user_address.shipping_address.house_number }} {{ guest_user_address.shipping_address.area_name }}{% endcomment %} 
+                                            {{ guest_user_address.shipping_address.city }}, {{ guest_user_address.shipping_address.state }}, {{ guest_user_address.shipping_address.country }}, {{ guest_user_address.shipping_address.zipcode }}</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 form-group">
+                                    <label for="carrier_service">Shipping Method</label>
+                                    <select name="carrier_service" class="form-control" id="carrier_service">
+                                        <option value="" disabled selected>Please Select Carrier First</option>
+                                    </select>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="address-add-blk show bill-address my-4">
+                                <div class="address-add-head">
+                                    <h4>Add Address</h4>
+                                </div>
+                                <form class="row add_address" method="POST" action="{% url 'add_guest_user_address' %}" id="billing">
+                                    {% csrf_token %}
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input class="form-control house-name" placeholder="Enter name associate with address" name="name" required>
+                                        </div>
+                                    </div>  
+                                    {% comment %} <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input class="form-control house-name" placeholder="House/ Apartment/ Flat Number" name="house_number">
+                                        </div>
+                                    </div> {% endcomment %}
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input class="form-control area-name" placeholder=" Area/ Road Name" name="area_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <select class="form-control country" name="country">
+                                                <option value="" disabled selected>Select Country</option>
+                                                {% for country in countries %}
+                                                <option value="{{ country.id }}">{{ country.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <select class="form-control state" name="state">
+                                                <option value="" disabled selected>Select State</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input class="form-control" placeholder="City / Town" name="city">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input class="form-control zipcode number-only" placeholder="Enter Zipcode" name="zipcode">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="hidden" name="country_code" id="country-code" readonly>
+                                            <input class="form-control number-only" id="mob-code" placeholder="Phone Number" name="phone" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Address</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="cart-summary-blk" style="display: none;">
+                        <h4>Order Summary</h4>
+                        <ul class="cart-billing-details">
+                            <li>Subtotal <span id="sub_total">${{ sub_total }}</span></li>
+                            {% for charge_name, amount in order_charges.items %}
+                            <li>
+                                {{ charge_name }}
+                                <span>${{ amount|floatformat:2 }}</span>
+                            </li>
+                            {% endfor %}
+                            <li>Shipping charges <span class="shipping_charges">$0.00</span></li>
+                            <li>Taxes applied <span class="tax_amount">$0.00</span></li> 
+                            <div class="divider"></div>
+                            <li class="total">Grand Total <span id="cart_total">${{ total|floatformat:2 }}</span></li>
+                        </ul>
+                        <button type="button" class='btn btn-primary' id='payment-btn' style="display: none;">Continue to Payment</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock content %}
+{% block script %}
+<script src="{% static 'adminpanel/intl-tel-input-master/build/js/intlTelInput.min.js' %}"></script>
+<script>
+    const input = document.querySelector("#mob-code");
+    const inst = window.intlTelInput(input, ({}));
+    function addCountryCodeToFrom() {
+        let information = inst.getSelectedCountryData()['dialCode'];
+        $('#country-code').val(information);
+    }
+</script>
+
+<script>
+    $('.cart-summary-blk').hide()
+    $('#payment-btn').hide()
+    $.validator.addMethod("noSpace", function(value, element) { 
+        return !value.startsWith(" ") && value != ""; 
+    }, "No space please and don't leave it empty")
+
+    $('.number-only').on('keypress', function() {
+        if ( isNaN( String.fromCharCode(event.keyCode) )) return false;
+    })
+
+    $(".add_address").each(function(key, form) {
+        $(this).validate({
+            rules: {
+                name: {
+                    required: true,
+                    maxlength: 55,
+                },
+                house_number: {
+                    required: true,
+                    noSpace: true,
+                    maxlength: 80,
+                },
+                area_name: {
+                    required: true,
+                    noSpace: true,
+                    maxlength: 200,
+                },
+                country: {
+                    required: true,
+                },
+                state: {
+                    required: true,
+                },
+                city: {
+                    required: true,
+                    noSpace: true,
+                    maxlength: 50,
+                },
+                zipcode: {
+                    required: true,
+                    digits: true,
+                    minlength: 5,
+                    maxlength: 12,
+                },
+                phone: {
+                    required: true,
+                    noSpace: true,
+                    digits: true,
+                    minlength: 7,
+                    maxlength: 15,
+                },
+            },
+            submitHandler: function (form) {
+                addCountryCodeToFrom();
+                form.submit()
+                setTimeout(() => {
+                    form.reset()
+                }, 500)
+                getCarrierService()
+            }
+        });
+    })
+
+
+    $('#loader').hide()
+    let serviceObj = {}
+
+    $('.form-check-input').on('change', function() {
+        $('#carrier_code').val("")
+        $('#carrier_service').html('<option value="" disabled selected>Please select carrier service</option>')
+        $('.cart-summary-blk').hide()
+        $('#payment-btn').hide()
+        getCarrierService()
+    })
+
+    function userHaveAnyAddress(showMyToast=true) {
+        let selectedAddress = $('input[name=saved-address]:checked').val()
+        if(!selectedAddress) {
+            if(showMyToast) {
+                myToast('Please Add Address First', ERROR_BG)
+            }
+            return false
+        } 
+        return true
+    }
+
+    function getCarrierService() {
+        $('#loader').show()
+        const carrierCode = "ups_walleted"
+        $.ajax({
+            url: "{% url 'shipping_tax' %}",
+            method: 'POST',
+            data: {
+                carrier_code: carrierCode,
+                address_id: $('input[name=saved-address]:checked').val()
+            },
+            success: function(response) {
+                $('#loader').hide()
+                if(!response.status) {
+                    myToast(response.message, ERROR_BG)
+                    return
+                }
+                serviceObj = response.carrier_services
+                if(serviceObj) {
+                    if(serviceObj.message || !response.status) {
+                        // for error
+                        let msg = serviceObj.message ? serviceObj.message: response.message
+                        myToast(msg, ERROR_BG)
+                        return
+                    }
+    
+                    let option = '<option value="" disabled selected>Please select carrier service</option>'
+                    serviceObj.forEach(
+                        function(data, i) {
+                            option +=  `<option value="${i}">${data.serviceName} ($${data.shipmentCost})</option>`
+                        }
+                    )
+                    $('#carrier_service').html(option)
+                }
+            }
+        })
+    }
+
+    if(userHaveAnyAddress(false)){
+        getCarrierService()
+    }
+    
+    let service = {}
+    let total = '{{ sub_total }}'
+    $('#cart_total').text(`$${total}`)
+    let tax_amount = 0
+
+    $('#carrier_service').on('change', function() {
+        if(!userHaveAnyAddress()){
+            return false
+        }
+        $('#loader').show()
+        let serviceIndex = $('#carrier_service').val()
+        service = serviceObj[serviceIndex]
+        $('.shipping_charges').html(`$${service.shipmentCost}`)
+        let shippingAddress = $("[name=saved-address]:checked").val()
+        $.ajax({
+            url: '{% url  "guest_user_tax_amount" %}',
+            method: "POST",
+            data: {
+                shipping_cost: service.shipmentCost,
+            },
+            success: function(response) {
+                if(response.status) {
+                    tax_amount = response.tax_amount
+                    total = (parseFloat("{{ sub_total }}") + parseFloat(service.shipmentCost) + parseFloat(tax_amount)).toFixed(2)
+                    $('.tax_amount').text(`$${tax_amount}`)
+                    $('#cart_total').text(`$${total}`)
+                    $('#loader').hide()
+                    $('.cart-summary-blk').show()
+                    $('#payment-btn').show()
+                } else {
+                    myToast('Something Went Wrong', ERROR_BG)
+                    window.location.replace("{% url 'view_cart' %}")
+                }
+            },
+            error: function() {
+                myToast('Something Went Wrong', ERROR_BG)
+                setTimeout(() => {
+                    location.reload()
+                }, 8000)
+            }
+        })
+    })
+
+
+    $(document).on('click', '#payment-btn', function() {
+        if(!userHaveAnyAddress()){
+            return false
+        }
+        $('#loader').show()
+        $.ajax({
+            method: "GET",
+            url: '{% url "guest_user_save_order_data_to_session" %}',
+            success: function(response) {
+                $('#loader').hide()
+                const url = response.success ? "{% url 'guest_user_payment' %}" : "{% url 'view_cart' %}"
+                window.location.replace(url)
+            },
+            error: function(a, b, c) {
+                myToast('Something Went Wrong', ERROR_BG)
+                window.location.replace("{% url 'view_cart' %}")
+            }
+        })
+    })
+</script>
+{% endblock script %}

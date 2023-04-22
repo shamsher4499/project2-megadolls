@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/data-table/dataTables.min.css' %}">
+<link rel="stylesheet" href="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.min.css' %}">
+{% endblock css %}
+
+{% block content %}
+{% url 'add_how_it_work_section' as add_how_it_work_section %}
+{% include "includes/section.html" with page_title="How It Work Section" btn_url=add_how_it_work_section btn_text="Add how it work section" %}
+
+<!-- Contextual classes start -->
+<section class="section">
+    <div class="row w-100" id="table-striped">
+        <div class="col-12">
+            <div class="card py-2 px-2">
+                <div class="card-content">
+                    <!-- table contextual / colored -->
+                    <div class="table-responsive">
+                        {% if how_it_work_sections %}
+                            <table class="table table table-striped text-center" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Sr no.</th>
+                                        <th>Image</th>
+                                        <th>Description</th>
+                                        {% for x in m_check %}
+                                            {% if  x.view == True or x.edit == True or x.delete == True  and request.user.user_type == "SUBADMIN"%}
+                                                <th>ACTION</th>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if request.user.user_type == "SUPERADMIN" %}
+                                            <th>ACTION</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {% for how_it_work_section in how_it_work_sections %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{% if how_it_work_section.img %}<img src="{{ how_it_work_section.img.url }}" width="100">{% endif %}</td>
+                                        <td>{{ how_it_work_section.description|truncatechars:60 }} ...</td>
+                                        {% if request.user.user_type == "SUPERADMIN" %}
+                                            <td>
+                                                <a href="{% url 'edit_how_it_work_section' how_it_work_section.slug %}" class="mx-1">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a>
+                                                <a href="#" class="mx-1 btn-delete-sub_admin" data-id="{{ how_it_work_section.slug }}">
+                                                    <span class="fa-fw select-all fas"></span>
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                        
+                                        {% if request.user.user_type == "SUBADMIN" %}
+                                            <td>
+                                                {% if x.edit == True %}
+                                                    <a href="{% url 'edit_how_it_work_section' how_it_work_section.slug %}" class="mx-1">
+                                                        <span class="fa-fw select-all fas"></span>
+                                                    </a>
+                                                {% endif %}
+                                                {% if x.delete == True %}
+                                                    <a href="#" class="mx-1 btn-delete-sub_admin" data-id="{{ sub_admin.id }}">
+                                                        <span class="fa-fw select-all fas"></span>
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="text-center">
+                                <strong style="font-size: 1.5em;">No Records</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<form method="POST" action="{% url 'delete_how_it_work_section' %}" class="mx-1" style="display: inline;" id="delete_form">
+    {% csrf_token %} <input type="hidden" name="slug" value="" id="sub_admin">
+</form>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'adminpanel/vendors/sweetalert2/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'adminpanel/data-table/dataTables.min.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.btn-delete-sub_admin').on('click', function (e) {
+            e.preventDefault()
+            let id = $(this).data('id')
+            Swal.fire({
+                title: 'Delete Sub Admin',
+                text: 'Are You Sure ?',
+                confirmButtonColor: 'rgb(225, 0, 127)',
+                showCancelButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#sub_admin').val(id)
+                    $('#delete_form').submit()
+                }
+            })
+        })
+    })
+</script>
+{% endblock script %}

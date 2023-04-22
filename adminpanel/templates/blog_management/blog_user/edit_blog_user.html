@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'adminpanel/image-preview/image-preview.css' %}">
+{% endblock css %}
+{% block content %}
+
+{% url 'blog_user' as view_shop_products %}
+{% include "includes/section.html" with page_title="Edit Blog User" btn_url=view_shop_products btn_text="Back" %}
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="POST" class="row" id="myForm" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">                             
+                                <div class="col-md-6 form-group">
+                                    <label>Status</label>
+                                    <select class="form-select" name="can_comment" required>
+                                        <option value="" disabled selected >Please Select</option>
+                                        <option value="True" {% if blog_user_data.can_comment %} selected {% endif %}>
+                                            Unblock
+                                        </option>
+                                        <option value="False" {% if not blog_user_data.can_comment %} selected {% endif %}>Block</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <button id="formSubmit" class="btn btn-primary me-1 mb-1 float-end">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
